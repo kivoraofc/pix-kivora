@@ -1,4 +1,25 @@
-# Python
+__pycache__/
+*.py[cod]
+env/
+venv/
+.venv/
+/.env
+/.venv
+pip-wheel-metadata/
+*.egg-info/
+build/
+dist/
+*.egg
+.DS_Store
+desktop.ini
+.vscode/
+node_modules/
+*.log
+*.sqlite3
+__MACOSX/
+/.pytest_cache/
+/.mypy_cache/
+/.idea/# Python
 __pycache__/
 *.py[cod]
 *.log

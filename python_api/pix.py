@@ -9,7 +9,7 @@ FRONTEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'pu
 app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path='')
 
 PUSHINPAY_BASE = "https://api.pushinpay.com.br"
-PUSHINPAY_TOKEN = "42572|HBuAKXo4ZxlwAGzJzzEw3P9XeyG3FJRfy3M4Qlo4d036c15e"
+PUSHINPAY_TOKEN = "43868|KDTirIabgqJOrQHPEeUzkja97Mx18xhlMf8JrQDnb8a5822a"
 
 # Endpoint /api/pix
 @app.route('/api/pix', methods=['POST'])

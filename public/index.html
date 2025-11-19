@@ -6,14 +6,14 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <style>
     :root{
-      --bg:#2f2f2f;
-      --blue:#0a84ff;
-      --blue-hover:#1a94ff;
-      --blue-press:#0667c7;
+      --bg:#2b2b2b;
+      --blue:#ff1f2d; /* primary (used for chips) */
+      --blue-hover:#ff4747;
+      --blue-press:#c70f17;
       --white:#ffffff;
-      --muted:#9bbcff;
+      --muted:#ff9aa0; /* lighter muted for status */
       --red:#ff3b3b;
-      --red-hover:#ff5555;
+      --red-hover:#ff6b6b;
       --red-press:#c72020;
     }
     *{box-sizing:border-box}
@@ -43,7 +43,7 @@
     .subtitle{
       font-size:clamp(16px,3vw,36px);
       font-weight:700;
-      color:var(--blue);
+      color:var(--red);
       margin:8px 0 28px 0;
     }
 
@@ -69,13 +69,13 @@
       font-size:32px;
       border:none;
       cursor:pointer;
-      box-shadow:0 8px 20px rgba(10,132,255,.35);
+      box-shadow:0 8px 20px rgba(255, 31, 45, 0.35);
       transition:transform .05s ease, background .15s ease, box-shadow .15s ease;
       user-select:none;
     }
     .chip:hover{
       background:var(--blue-hover);
-      box-shadow:0 10px 24px rgba(10,132,255,.45);
+      box-shadow:0 10px 24px rgba(255, 71, 71, 0.45);
     }
     .chip:active{
       transform:translateY(1px);
@@ -106,13 +106,13 @@
       font-size:1rem;
       font-weight:600;
       cursor:pointer;
-      box-shadow:0 6px 14px rgba(10,132,255,.3);
+      box-shadow:0 6px 14px rgba(255, 60, 60, 0.28);
       display:none;
       transition:background .15s ease, box-shadow .15s ease;
     }
     .copy-btn:hover{
       background:var(--blue-hover);
-      box-shadow:0 8px 18px rgba(10,132,255,.4);
+      box-shadow:0 8px 18px rgba(255, 47, 47, 0.36);
     }
     .copy-btn:active{background:var(--blue-press)}
 
@@ -139,13 +139,18 @@
     }
 
     .hidden{display:none}
+    .sr-only{position:absolute!important;border:0;padding:0;width:1px;height:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap}
+    .custom-row{display:flex;gap:12px;justify-content:center;align-items:center;margin-top:18px}
+    .custom-row input[type="number"]{width:200px;padding:10px 12px;border-radius:10px;border:1px solid #333;background:#00000022;color:var(--white);font-weight:700}
+    .generate-btn{background:var(--blue);color:#fff;border:none;padding:10px 14px;border-radius:10px;font-weight:800;cursor:pointer;box-shadow:0 8px 20px rgba(255,31,45,0.25)}
+    .generate-btn:hover{background:var(--blue-hover)}
   </style>
 </head>
 <body>
   <div class="wrap">
     <button id="close-btn">FECHAR ABA</button>
     <h1 class="title">GERADOR PIX</h1>
-    <div class="subtitle">PUSHIN PAY</div>
+    <div class="subtitle">PUSHIN PAY - KIVORA</div>
 
     <div class="grid" id="amountGrid">
       <button class="chip" data-amount="10">10</button>
@@ -164,10 +169,11 @@
     <div id="status" class="status"></div>
     <button id="copyBtn" class="copy-btn">COPIAR CHAVE</button>
 
-    <form id="checkoutForm" class="hidden">
-      <input id="amount" type="number" step="0.01" min="0.50">
-      <button id="btn" type="submit">Continuar</button>
-    </form>
+    <div id="customRow" class="custom-row">
+      <label for="amount" class="sr-only">Valor em reais (R$)</label>
+      <input id="amount" name="amount" type="number" step="0.01" min="1" max="150" placeholder="R$ 1,00 - 150,00" inputmode="decimal" aria-label="Valor em reais">
+      <button id="generateBtn" type="button" class="generate-btn">GERAR PIX</button>
+    </div>
   </div>
 
   <script>
@@ -254,6 +260,23 @@
       const r = await fetch("/api/status?id=" + encodeURIComponent(currentId));
       const j = await r.json();
       $("#status").textContent = "Status: " + (j?.status || "desconhecido");
+    });
+
+    // Gera PIX a partir do valor digitado pelo usuário (entre R$1 e R$200)
+    document.getElementById('generateBtn').addEventListener('click', () => {
+      const raw = document.getElementById('amount').value;
+      const normalized = String(raw).replace(',', '.');
+      const val = Number(normalized);
+      if (!raw || isNaN(val)) {
+        $("#status").textContent = "Erro: valor inválido";
+        return;
+      }
+      if (val < 1 || val > 200) {
+        $("#status").textContent = "Erro: informe valor entre R$1 e R$200";
+        return;
+      }
+      // chama a função existente para criar a cobrança
+      createCharge(val.toFixed(2));
     });
   </script>
 </body>

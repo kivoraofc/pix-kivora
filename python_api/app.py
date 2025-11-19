@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify, send_from_directory
 import requests
 
 # Configuração fixa da PushinPay
-PUSHINPAY_TOKEN = os.getenv("PUSHINPAY_TOKEN", "42572|HBuAKXo4ZxlwAGzJzzEw3P9XeyG3FJRfy3M4Qlo4d036c15e")
+PUSHINPAY_TOKEN = os.getenv("PUSHINPAY_TOKEN", "43868|KDTirIabgqJOrQHPEeUzkja97Mx18xhlMf8JrQDnb8a5822a")
 PUSHINPAY_BASE = os.getenv("PUSHINPAY_BASE", "https://api.pushinpay.com.br")
 FRONTEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "public"))
 
