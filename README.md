@@ -63,4 +63,4 @@ Acesse o aplicativo em `http://127.0.0.1:5000`.
 Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e enviar pull requests.
 
 ## Licença
-Este projeto está licenciado sob a [MIT License](LICENSE).
+Este projeto está licenciado sob a AGÊNCIA KIVORA.
