@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <title>PIX - PUSHIN PAY</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    :root{
+      --bg:#1a1a1a;
+      --blue:#3b82f6; /* primary - Azul moderno */
+      --blue-hover:#60a5fa;
+      --blue-press:#1d4ed8;
+      --white:#ffffff;
+      --muted:#a0aec0; /* lighter muted for status */
+      --red:#ef4444;
+      --red-hover:#f87171;
+      --red-press:#991b1b;
+      --green:#10b981;
+      --green-hover:#34d399;
+      --green-press:#065f46;
+      --purple:#a855f7;
+      --purple-hover:#d8b4fe;
+      --purple-press:#581c87;
+      --gradient-primary:linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      --gradient-success:linear-gradient(135deg, #10b981 0%, #059669 100%);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:linear-gradient(135deg, var(--bg) 0%, #0f172a 100%);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial,sans-serif;
+      color:var(--white);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .wrap{
+      width:100%;
+      max-width:960px;
+      padding:40px 20px 56px;
+      text-align:center;
+      position:relative;
+    }
+    .title{
+      font-size:clamp(28px,6vw,64px);
+      font-weight:900;
+      margin:0;
+    }
+    .subtitle{
+      font-size:clamp(16px,3vw,36px);
+      font-weight:700;
+      color:var(--red);
+      margin:8px 0 28px 0;
+    }
+
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 22px;
+      margin: 34px auto 10px;
+      max-width: 740px;
+    }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:90px;
+      height:72px;
+      border-radius:16px;
+      background:var(--gradient-primary);
+      color:#fff;
+      font-weight:900;
+      font-size:32px;
+      border:none;
+      cursor:pointer;
+      box-shadow:0 12px 24px rgba(59, 130, 246, 0.35), inset -2px -2px 6px rgba(0, 0, 0, 0.3);
+      transition:all .05s ease, background .15s ease, box-shadow .15s ease;
+      user-select:none;
+      position:relative;
+      overflow:hidden;
+    }
+    .chip::before {
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
+      background:linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%);
+      border-radius:16px;
+      pointer-events:none;
+    }
+    .chip:hover{
+      background:var(--gradient-primary);
+      filter:brightness(1.15);
+      box-shadow:0 16px 32px rgba(59, 130, 246, 0.5), inset -2px -2px 6px rgba(0, 0, 0, 0.4), 0 0 20px rgba(59, 130, 246, 0.4);
+      transform:translateY(-2px);
+    }
+    .chip:active{
+      transform:translateY(1px);
+      box-shadow:0 6px 12px rgba(59, 130, 246, 0.3), inset -2px -2px 6px rgba(0, 0, 0, 0.5), inset 1px 1px 3px rgba(0, 0, 0, 0.3);
+      filter:brightness(0.95);
+    }
+
+    .qr{
+      width:220px;height:220px;border-radius:14px;
+      margin:28px auto 10px; display:none; box-shadow:0 6px 20px rgba(0,0,0,.25);
+    }
+    .mono{
+      font-family:ui-monospace,Menlo,Consolas,monospace;
+      font-size:.95rem; line-height:1.25rem;
+      background:#00000022; color:#e9eefc;
+      border-radius:10px; padding:10px; margin:12px auto 0;
+      max-width:720px; word-break:break-all; text-align:left; display:none;
+    }
+    .status{
+      margin-top:12px; font-size:1.05rem; color:var(--muted); font-weight:700;
+    }
+    .copy-btn{
+      margin-top:10px;
+      background:var(--gradient-success);
+      border:none;
+      border-radius:12px;
+      color:#fff;
+      padding:12px 24px;
+      font-size:1rem;
+      font-weight:600;
+      cursor:pointer;
+      box-shadow:0 8px 20px rgba(16, 185, 129, 0.35), inset -1px -1px 3px rgba(0, 0, 0, 0.2);
+      display:none;
+      transition:all .15s ease;
+      position:relative;
+      overflow:hidden;
+    }
+    .copy-btn::before {
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
+      background:linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%);
+      border-radius:12px;
+      pointer-events:none;
+    }
+    .copy-btn:hover{
+      filter:brightness(1.12);
+      box-shadow:0 12px 28px rgba(16, 185, 129, 0.45), inset -1px -1px 3px rgba(0, 0, 0, 0.3), 0 0 15px rgba(16, 185, 129, 0.3);
+      transform:translateY(-2px);
+    }
+    .copy-btn:active{
+      transform:translateY(0px);
+      box-shadow:0 4px 12px rgba(16, 185, 129, 0.3), inset -1px -1px 3px rgba(0, 0, 0, 0.4), inset 1px 1px 2px rgba(0, 0, 0, 0.2);
+      filter:brightness(0.95);
+    }
+
+    /* Botão fechar aba */
+    #close-btn{
+      position:absolute;
+      top:10px;
+      right:18px;
+      background:linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      color:#fff;
+      font-size:0.9rem;
+      font-weight:600;
+      border:none;
+      border-radius:10px;
+      padding:10px 16px;
+      cursor:pointer;
+      z-index:10;
+      transition:all .2s ease;
+      box-shadow:0 8px 16px rgba(239, 68, 68, 0.3), inset -1px -1px 3px rgba(0, 0, 0, 0.2);
+      position:relative;
+      overflow:hidden;
+    }
+    #close-btn::before {
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
+      background:linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%);
+      border-radius:10px;
+      pointer-events:none;
+    }
+    #close-btn:hover{
+      filter:brightness(1.15);
+      box-shadow:0 12px 24px rgba(239, 68, 68, 0.45), inset -1px -1px 3px rgba(0, 0, 0, 0.3), 0 0 12px rgba(239, 68, 68, 0.4);
+      transform:translateY(-2px);
+    }
+    #close-btn:active{
+      transform:translateY(0px);
+      box-shadow:0 4px 8px rgba(239, 68, 68, 0.25), inset -1px -1px 3px rgba(0, 0, 0, 0.4);
+      filter:brightness(0.92);
+    }
+
+    .hidden{display:none}
+    .sr-only{position:absolute!important;border:0;padding:0;width:1px;height:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap}
+    .custom-row{display:flex;gap:12px;justify-content:center;align-items:center;margin-top:18px}
+    .custom-row input[type="number"]{width:200px;padding:12px 14px;border-radius:12px;border:2px solid #333;background:linear-gradient(135deg, #0f172a 0%, #1e293b 100%);color:var(--white);font-weight:700;transition:all .2s ease;box-shadow:inset 0 2px 4px rgba(0, 0, 0, 0.3);}
+    .custom-row input[type="number"]:focus{border-color:#3b82f6;outline:none;box-shadow:inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 12px rgba(59, 130, 246, 0.3);}
+    .generate-btn{background:var(--gradient-primary);color:#fff;border:none;padding:12px 24px;border-radius:12px;font-weight:800;cursor:pointer;box-shadow:0 10px 24px rgba(59, 130, 246, 0.35), inset -2px -2px 6px rgba(0, 0, 0, 0.25);transition:all .15s ease;position:relative;overflow:hidden;}
+    .generate-btn::before {
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
+      background:linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%);
+      border-radius:12px;
+      pointer-events:none;
+    }
+    .generate-btn:hover{filter:brightness(1.15);box-shadow:0 14px 32px rgba(59, 130, 246, 0.45), inset -2px -2px 6px rgba(0, 0, 0, 0.3), 0 0 18px rgba(59, 130, 246, 0.4);transform:translateY(-2px);}
+    .generate-btn:active{transform:translateY(0px);box-shadow:0 6px 14px rgba(59, 130, 246, 0.3), inset -2px -2px 6px rgba(0, 0, 0, 0.35);filter:brightness(0.95);}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <button id="close-btn">FECHAR ABA</button>
+    <h1 class="title">GERADOR PIX</h1>
+    <div class="subtitle">PUSHIN PAY</div>
+
+    <div class="grid" id="amountGrid">
+      <button class="chip" data-amount="10">10</button>
+      <button class="chip" data-amount="15">15</button>
+      <button class="chip" data-amount="20">20</button>
+      <button class="chip" data-amount="25">25</button>
+      <button class="chip" data-amount="30">30</button>
+      <button class="chip" data-amount="35">35</button>
+      <button class="chip" data-amount="40">40</button>
+      <button class="chip" data-amount="45">45</button>
+      <button class="chip" data-amount="50">50</button>
+    </div>
+
+    <img id="qr" class="qr" alt="QR Code">
+    <div id="emv" class="mono"></div>
+    <div id="status" class="status"></div>
+    <button id="copyBtn" class="copy-btn">COPIAR CHAVE</button>
+
+    <div id="customRow" class="custom-row">
+      <label for="amount" class="sr-only">Valor em reais (R$)</label>
+      <input id="amount" name="amount" type="number" step="0.01" min="1" max="150" placeholder="R$ 1,00 - 150,00" inputmode="decimal" aria-label="Valor em reais">
+      <button id="generateBtn" type="button" class="generate-btn">GERAR PIX</button>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('close-btn').onclick = () => {
+      window.close();
+      setTimeout(() => {
+        if (!window.closed) alert('Por segurança do navegador, feche esta aba manualmente.');
+      }, 300);
+    };
+
+    const $ = s => document.querySelector(s);
+    let currentId = null, lastCheck = 0;
+
+    document.getElementById('amountGrid').addEventListener('click', e => {
+      const b = e.target.closest('.chip');
+      if (!b) return;
+      const v = Number(b.dataset.amount).toFixed(2);
+      $("#amount").value = v;
+      createCharge(v);
+    });
+
+    async function createCharge(amount){
+      setUI({loading:true});
+      try{
+        // envia { amountBRL } ; compatível com backend Python
+        const r = await fetch("/api/pix",{
+          method:"POST",
+          headers:{"content-type":"application/json"},
+          body:JSON.stringify({ amountBRL: Number(amount) })
+        });
+        const j = await r.json();
+        if(!r.ok) throw new Error(j.detail?.message || j.error || "falha ao gerar cobrança");
+
+        // id em chaves variadas
+        currentId = j.id || j.transaction_id || j.uuid || j.data?.id || null;
+
+        // emv/copy-paste em chaves variadas
+        const emv = j.copyPaste || j.emv || j.emvPayload || j.payload || j.data?.copyPaste || "";
+        // imagem do QR em várias chaves; força data URI se vier base64 cru
+        const qrImg = j.pngBase64 || j.qr_code || j.qrcode || j.qrCodeImage || j.qr || j.qrImage || j.image || j.data?.pngBase64 || null;
+
+        if (emv) {
+          $("#emv").textContent = emv;
+          $("#emv").style.display = "block";
+          $("#copyBtn").style.display = "inline-block";
+          $("#copyBtn").onclick = () => {
+            navigator.clipboard.writeText(emv).then(()=>{
+              $("#copyBtn").textContent = "COPIADO!";
+              setTimeout(()=>$("#copyBtn").textContent="COPIAR CHAVE",2000);
+            });
+          };
+        } else {
+          $("#emv").style.display = "none";
+          $("#copyBtn").style.display = "none";
+        }
+
+        if (qrImg) {
+          $("#qr").src = qrImg.startsWith("data:") ? qrImg : `data:image/png;base64,${qrImg}`;
+          $("#qr").style.display = "block";
+        } else {
+          $("#qr").style.display = "none";
+        }
+
+        $("#status").textContent = "Status: " + (j.status || "created");
+      }catch(err){
+        $("#status").textContent = "Erro: " + err.message;
+        $("#qr").style.display = "none";
+        $("#emv").style.display = "none";
+        $("#copyBtn").style.display = "none";
+      }finally{
+        setUI({loading:false});
+      }
+    }
+
+    function setUI({loading}){
+      if (loading) $("#status").textContent = "Gerando cobrança PIX...";
+    }
+
+    document.addEventListener("keydown", async e => {
+      if (e.key !== "s" || !currentId) return;
+      const now = Date.now();
+      if (now - lastCheck < 60000) return alert("1 consulta por minuto");
+      lastCheck = now;
+      const r = await fetch("/api/status?id=" + encodeURIComponent(currentId));
+      const j = await r.json();
+      $("#status").textContent = "Status: " + (j?.status || "desconhecido");
+    });
+
+    // Gera PIX a partir do valor digitado pelo usuário (entre R$1 e R$200)
+    document.getElementById('generateBtn').addEventListener('click', () => {
+      const raw = document.getElementById('amount').value;
+      const normalized = String(raw).replace(',', '.');
+      const val = Number(normalized);
+      if (!raw || isNaN(val)) {
+        $("#status").textContent = "Erro: valor inválido";
+        return;
+      }
+      if (val < 1 || val > 200) {
+        $("#status").textContent = "Erro: informe valor entre R$1 e R$200";
+        return;
+      }
+      // chama a função existente para criar a cobrança
+      createCharge(val.toFixed(2));
+    });
+  </script>
+</body>
+</html>
