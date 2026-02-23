@@ -1,0 +1,17 @@
+{
+  "builds": [
+    {
+      "src": "python_api/pix.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "python_api/pix.py"
+    }
+  ],
+  "env": {
+    "PYTHON_VERSION": "3.13"
+  }
+}
